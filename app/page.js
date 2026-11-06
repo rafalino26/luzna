@@ -6,7 +6,7 @@ import {ProductGrid} from './storefront';
 export default function Home(){
   return <main>
     <section className="hero">
-      <div className="intro"><div className="eyebrow"><span/> THE FIRST EDIT · 01</div><h1>Anggun dalam<br/><em>kesederhanaan.</em></h1><p>Busana modest dengan siluet lembut dan warna yang mudah dipadukan, untuk menemani hari-harimu.</p><Link className="cta" href="/shop">Jelajahi koleksi <Icon kind="arrow" size={17}/></Link></div>
+      <div className="intro"><div className="eyebrow"><span/> THE FIRST EDIT · 01</div><h1>Elegance<br/><em>in Sunnah</em></h1><p>Busana modest dengan siluet lembut dan warna yang mudah dipadukan, untuk menemani hari-harimu.</p><Link className="cta" href="/shop">Jelajahi koleksi <Icon kind="arrow" size={17}/></Link></div>
       <div className="hero-photo" role="img" aria-label="Kampanye koleksi Luzna dengan abaya olive dan ivory"><span>01 / THE FIRST EDIT</span></div>
     </section>
     <section className="collection category-section">

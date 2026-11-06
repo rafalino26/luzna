@@ -41,7 +41,7 @@ export default function Storefront({children}) {
   }
 
   return <OpenProduct.Provider value={openProduct}>
-    <div className="ribbon">LUZNA STUDIO <span><Icon kind="sparkle" size={10}/></span> THE FIRST EDIT</div>
+    <div className="ribbon">LUZNA STUDIO <span><Icon kind="sparkle" size={10}/></span> ELEGANCE IN SUNNAH</div>
     <header className="nav">
       <button type="button" className="mobile-menu-trigger" aria-label="Buka menu" aria-haspopup="dialog" aria-controls="mobile-menu" onClick={()=>mobileMenu.current.showModal()}>
         <Icon kind="menu"/>
