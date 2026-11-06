@@ -2,13 +2,28 @@
 import Link from 'next/link';
 import Icon from './ui-icon';
 import {useRouter} from 'next/navigation';
-import {createContext, useContext, useState} from 'react';
+import {createContext, useContext, useEffect, useRef, useState} from 'react';
 import {categories, defaultSizes, money} from './catalog';
 
 const OpenProduct = createContext(null);
+const mainLinks = [
+  {href:'/new-arrivals', label:'New Arrivals'},
+  {href:'/about', label:'About Us'},
+  {href:'/sale', label:'Sale'},
+];
 
 export default function Storefront({children}) {
   const router = useRouter();
+  const mobileMenu = useRef(null);
+
+  useEffect(() => {
+    const mobile = window.matchMedia('(max-width: 760px)');
+    const closeOnDesktop = event => {
+      if (!event.matches) mobileMenu.current?.close();
+    };
+    mobile.addEventListener('change', closeOnDesktop);
+    return () => mobile.removeEventListener('change', closeOnDesktop);
+  }, []);
   const [panel,setPanel] = useState(null);
   const [query,setQuery] = useState('');
   const [size,setSize] = useState('M');
@@ -28,10 +43,13 @@ export default function Storefront({children}) {
   return <OpenProduct.Provider value={openProduct}>
     <div className="ribbon">LUZNA STUDIO <span><Icon kind="sparkle" size={10}/></span> THE FIRST EDIT</div>
     <header className="nav">
+      <button type="button" className="mobile-menu-trigger" aria-label="Buka menu" aria-haspopup="dialog" aria-controls="mobile-menu" onClick={()=>mobileMenu.current.showModal()}>
+        <Icon kind="menu"/>
+      </button>
       <Link className="logo" href="/" aria-label="Luzna, beranda">luzna<span>.</span></Link>
-      <nav aria-label="Navigasi utama">
+      <nav className="desktop-nav" aria-label="Navigasi utama">
         <div className="shop-nav"><Link href="/shop">Shop</Link><div className="shop-menu"><Link href="/shop">Shop All</Link>{categories.map(category=><Link key={category.id} href={'/shop?category='+category.id}>{category.name}</Link>)}</div></div>
-        <Link href="/new-arrivals">New Arrivals</Link><Link href="/about">About Us</Link><Link href="/sale">Sale</Link>
+        {mainLinks.map(({href,label})=><Link key={href} href={href}>{label}</Link>)}
       </nav>
       <div className="actions">
         {['search','account','bag'].map((kind,index)=><button key={kind} aria-label={['Cari produk','Akun','Tas belanja'][index]} onClick={()=>setPanel(kind)}>
@@ -39,6 +57,23 @@ export default function Storefront({children}) {
         </button>)}
       </div>
     </header>
+    <dialog className="mobile-menu" id="mobile-menu" ref={mobileMenu} aria-label="Menu Luzna" onClick={event=>{
+      if (event.target===event.currentTarget) mobileMenu.current.close();
+    }}>
+      <div className="mobile-menu-content">
+        <div className="mobile-menu-heading">
+          <Link className="logo" href="/" aria-label="Luzna, beranda" onClick={()=>mobileMenu.current.close()}>luzna<span>.</span></Link>
+          <button type="button" className="close" autoFocus aria-label="Tutup menu" onClick={()=>mobileMenu.current.close()}><Icon kind="close"/></button>
+        </div>
+        <nav aria-label="Navigasi mobile" onClick={event=>{
+          if (event.target.closest('a')) mobileMenu.current.close();
+        }}>
+          <Link href="/shop">Shop <Icon kind="arrow" size={16}/></Link>
+          <div className="mobile-menu-categories">{categories.map(category=><Link key={category.id} href={'/shop?category='+category.id}>{category.name}</Link>)}</div>
+          {mainLinks.map(({href,label})=><Link key={href} href={href}>{label}</Link>)}
+        </nav>
+      </div>
+    </dialog>
     {children}
     <footer><Link className="logo" href="/">luzna<span>.</span></Link><p>Konsep storefront · Foto, produk, dan harga ilustrasi.</p><Link href="/shop">Jelajahi Shop <Icon kind="arrow" size={15}/></Link></footer>
     {panel&&<div className="overlay" onClick={()=>setPanel(null)}>
